@@ -1,22 +1,27 @@
 #
 # Conditional build:
 %bcond_without	apidocs		# do not build and package API docs
+%bcond_without	libxml2		# XML documents support
+%bcond_without	lwgeom		# LWGEOM support
 #
 Summary:	Spatial SQL database engine based on SQLite
 Summary(pl.UTF-8):	Silnik przestrzennej bazy danych SQL oparty na SQLite
 Name:		libspatialite
-Version:	4.0.0
+Version:	4.1.0
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		Libraries
 Source0:	http://www.gaia-gis.it/gaia-sins/libspatialite-sources/%{name}-%{version}.tar.gz
-# Source0-md5:	8040ce4e39913e7d284675c0f15d270d
+# Source0-md5:	8701f34e5ee1f018fa2d9744f50f637c
 URL:		https://www.gaia-gis.it/fossil/libspatialite
 %{?with_apidocs:BuildRequires:	doxygen >= 1.7.3}
 BuildRequires:	freexl-devel >= 0.0.4
 BuildRequires:	geos-devel >= 3.3.0
+%{?with_lwgeom:BuildRequires:	liblwgeom-devel}
+%{?with_libxml2:BuildRequires:	libxml2-devel >= 2.0}
 BuildRequires:	proj-devel >= 4
 BuildRequires:	sqlite3-devel >= 3.7.3
+BuildRequires:	zlib-devel
 Requires:	freexl >= 0.0.4
 Requires:	geos >= 3.3.0
 Requires:	proj >= 4
@@ -36,6 +41,8 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	freexl-devel >= 0.0.4
 Requires:	geos-devel >= 3.3.0
+%{?with_lwgeom:Requires:	liblwgeom-devel}
+%{?with_libxml2:Requires:	libxml2-devel >= 2.0}
 Requires:	proj-devel >= 4
 Requires:	sqlite3-devel >= 3.7.3
 
@@ -73,7 +80,10 @@ Dokumentacja API biblioteki spatialite.
 
 %build
 %configure \
-	--enable-geocallbacks
+	--enable-geocallbacks \
+	--enable-geopackage \
+	%{?with_libxml2:--enable-libxml2} \
+	%{?with_lwgeom:--enable-lwgeom}
 
 %{__make}
 
