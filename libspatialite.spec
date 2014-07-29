@@ -7,12 +7,12 @@
 Summary:	Spatial SQL database engine based on SQLite
 Summary(pl.UTF-8):	Silnik przestrzennej bazy danych SQL oparty na SQLite
 Name:		libspatialite
-Version:	4.1.1
-Release:	4
+Version:	4.2.0
+Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		Libraries
 Source0:	http://www.gaia-gis.it/gaia-sins/libspatialite-sources/%{name}-%{version}.tar.gz
-# Source0-md5:	356e0b18de0d382e27da578dc227a7b0
+# Source0-md5:	83305ed694a77152120d1f74c5151779
 URL:		https://www.gaia-gis.it/fossil/libspatialite
 %{?with_apidocs:BuildRequires:	doxygen >= 1.7.3}
 BuildRequires:	freexl-devel >= 0.0.4
@@ -45,6 +45,7 @@ Requires:	geos-devel >= 3.3.0
 %{?with_libxml2:Requires:	libxml2-devel >= 2.0}
 Requires:	proj-devel >= 4
 Requires:	sqlite3-devel >= 3.7.3
+Requires:	zlib-devel
 
 %description devel
 Header files for spatialite library.
@@ -95,6 +96,8 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+# loadable module
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/mod_spatialite.la
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libspatialite.la
 
@@ -106,9 +109,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS
+%doc AUTHORS README
 %attr(755,root,root) %{_libdir}/libspatialite.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libspatialite.so.5
+%attr(755,root,root) %ghost %{_libdir}/libspatialite.so.7
+# sqlite3 module
+%attr(755,root,root) %{_libdir}/mod_spatialite.so*
 
 %files devel
 %defattr(644,root,root,755)
