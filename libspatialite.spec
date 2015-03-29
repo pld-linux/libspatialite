@@ -3,12 +3,12 @@
 %bcond_without	apidocs		# do not build and package API docs
 %bcond_without	libxml2		# XML documents support
 %bcond_without	lwgeom		# LWGEOM support
-#
+
 Summary:	Spatial SQL database engine based on SQLite
 Summary(pl.UTF-8):	Silnik przestrzennej bazy danych SQL oparty na SQLite
 Name:		libspatialite
 Version:	4.2.0
-Release:	4
+Release:	5
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		Libraries
 Source0:	http://www.gaia-gis.it/gaia-sins/libspatialite-sources/%{name}-%{version}.tar.gz
@@ -69,6 +69,9 @@ Statyczna biblioteka spatialite.
 Summary:	spatialite API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki spatialite
 Group:		Documentation
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description apidocs
 API and internal documentation for spatialite library.
