@@ -6,7 +6,7 @@
 %bcond_with	bootstrap	# bootstrap without postgis dependency
 
 %if %{with bootstrap}
-%undefine	with_wlgeom
+%undefine	with_lwgeom
 %endif
 
 Summary:	Spatial SQL database engine based on SQLite
