@@ -3,12 +3,17 @@
 %bcond_without	apidocs		# do not build and package API docs
 %bcond_without	libxml2		# XML documents support
 %bcond_without	lwgeom		# LWGEOM support
+%bcond_with	bootstrap	# bootstrap without postgis dependency
+
+%if %{with bootstrap}
+%undefine	with_wlgeom
+%endif
 
 Summary:	Spatial SQL database engine based on SQLite
 Summary(pl.UTF-8):	Silnik przestrzennej bazy danych SQL oparty na SQLite
 Name:		libspatialite
 Version:	4.3.0a
-Release:	1
+Release:	1.1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		Libraries
 Source0:	http://www.gaia-gis.it/gaia-sins/libspatialite-sources/%{name}-%{version}.tar.gz
