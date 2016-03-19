@@ -1,0 +1,20 @@
+--- libspatialite-4.3.0a/src/gaiageo/gg_lwgeom.c.orig	2016-03-19 07:15:09.917471871 +0100
++++ libspatialite-4.3.0a/src/gaiageo/gg_lwgeom.c	2016-03-19 07:15:14.954138404 +0100
+@@ -92,7 +92,7 @@
+ lwgaia_noticereporter (const char *fmt, va_list ap)
+ {
+     char *msg;
+-    if (!lw_vasprintf (&msg, fmt, ap))
++    if (!vasprintf (&msg, fmt, ap))
+       {
+ 	  va_end (ap);
+ 	  return;
+@@ -106,7 +106,7 @@
+ lwgaia_errorreporter (const char *fmt, va_list ap)
+ {
+     char *msg;
+-    if (!lw_vasprintf (&msg, fmt, ap))
++    if (!vasprintf (&msg, fmt, ap))
+       {
+ 	  va_end (ap);
+ 	  return;

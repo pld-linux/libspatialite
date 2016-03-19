@@ -7,12 +7,13 @@
 Summary:	Spatial SQL database engine based on SQLite
 Summary(pl.UTF-8):	Silnik przestrzennej bazy danych SQL oparty na SQLite
 Name:		libspatialite
-Version:	4.3.0
-Release:	2
+Version:	4.3.0a
+Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		Libraries
 Source0:	http://www.gaia-gis.it/gaia-sins/libspatialite-sources/%{name}-%{version}.tar.gz
-# Source0-md5:	59ec162d3e4db2d247945e3a943f64bc
+# Source0-md5:	6b380b332c00da6f76f432b10a1a338c
+Patch0:		%{name}-lwgeom.patch
 URL:		https://www.gaia-gis.it/fossil/libspatialite
 %{?with_apidocs:BuildRequires:	doxygen >= 1.7.3}
 BuildRequires:	freexl-devel >= 1.0.1
@@ -81,6 +82,7 @@ Dokumentacja API biblioteki spatialite.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %configure \
