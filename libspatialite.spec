@@ -1,37 +1,34 @@
 #
 # Conditional build:
-%bcond_without	apidocs		# do not build and package API docs
+%bcond_without	apidocs		# API documentation
 %bcond_without	libxml2		# XML documents support
-%bcond_without	lwgeom		# LWGEOM support
-%bcond_with	bootstrap	# bootstrap without postgis dependency
-
-%if %{with bootstrap}
-%undefine	with_lwgeom
-%endif
 
 Summary:	Spatial SQL database engine based on SQLite
 Summary(pl.UTF-8):	Silnik przestrzennej bazy danych SQL oparty na SQLite
 Name:		libspatialite
-Version:	4.3.0a
-Release:	10
-License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
+Version:	5.0.1
+Release:	1
+# libspatialite itself is MPL v1.1 or GPL v2+ or LGPL v2.1+, but gcp and rttopo features enforce GPL
+License:	GPL v2+
 Group:		Libraries
 Source0:	http://www.gaia-gis.it/gaia-sins/libspatialite-sources/%{name}-%{version}.tar.gz
-# Source0-md5:	6b380b332c00da6f76f432b10a1a338c
-Patch0:		%{name}-lwgeom.patch
+# Source0-md5:	5f4a961afbb95dcdc715b5d7f8590573
 URL:		https://www.gaia-gis.it/fossil/libspatialite
 %{?with_apidocs:BuildRequires:	doxygen >= 1.7.3}
 BuildRequires:	freexl-devel >= 1.0.1
-BuildRequires:	geos-devel >= 3.4.0
-%{?with_lwgeom:BuildRequires:	liblwgeom-devel}
+BuildRequires:	geos-devel >= 3.7.0
+BuildRequires:	librttopo-devel >= 1.1.0
 %{?with_libxml2:BuildRequires:	libxml2-devel >= 2.0}
+BuildRequires:	minizip-devel
 BuildRequires:	proj-devel >= 4.8.0
-BuildRequires:	sqlite3-devel >= 3.7.3
+BuildRequires:	rpm-build >= 4.6
+BuildRequires:	sqlite3-devel >= 3.8.5
 BuildRequires:	zlib-devel
 Requires:	freexl >= 1.0.1
-Requires:	geos >= 3.4.0
+Requires:	geos >= 3.7.0
+Requires:	librttopo >= 1.1.0
 Requires:	proj >= 4.8.0
-Requires:	sqlite3 >= 3.7.3
+Requires:	sqlite3 >= 3.8.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -46,11 +43,12 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki spatialite
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	freexl-devel >= 1.0.1
-Requires:	geos-devel >= 3.4.0
-%{?with_lwgeom:Requires:	liblwgeom-devel}
+Requires:	geos-devel >= 3.7.0
+Requires:	librttopo-devel >= 1.1.0
 %{?with_libxml2:Requires:	libxml2-devel >= 2.0}
+Requires:	minizip-devel
 Requires:	proj-devel >= 4.8.0
-Requires:	sqlite3-devel >= 3.7.3
+Requires:	sqlite3-devel >= 3.8.5
 Requires:	zlib-devel
 
 %description devel
@@ -85,15 +83,13 @@ Dokumentacja API biblioteki spatialite.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 export CFLAGS="%{rpmcflags} -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
 %configure \
 	--enable-geocallbacks \
 	--enable-geopackage \
-	%{?with_libxml2:--enable-libxml2} \
-	%{?with_lwgeom:--enable-lwgeom}
+	%{!?with_libxml2:--disable-libxml2}
 
 %{__make}
 
@@ -138,5 +134,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with apidocs}
 %files apidocs
 %defattr(644,root,root,755)
-%doc html/*
+%doc html/{search,*.css,*.html,*.js,*.png}
 %endif
